@@ -19,17 +19,25 @@ class MainActivity : ComponentActivity() {
             NdkdemoTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    Greeting("Android")
+                    Greeting(helloFromCpp())
                 }
             }
+        }
+    }
+
+    private external fun helloFromCpp(): String
+
+    companion object {
+        init {
+            System.loadLibrary("ndkdemo")
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+fun Greeting(text: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Hello $name!",
+        text = text,
         modifier = modifier
     )
 }
@@ -38,6 +46,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     NdkdemoTheme {
-        Greeting("Android")
+        Greeting("ndkdemo")
     }
 }
