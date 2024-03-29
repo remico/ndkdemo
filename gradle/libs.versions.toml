@@ -1,31 +1,74 @@
 [versions]
 agp = "8.3.1"
+compose-compiler = "1.5.11"
 kotlin = "1.9.23"
-composeCompiler = "1.5.11"
-coreKtx = "1.12.0"
+compose-bom = "2024.03.00"
+core-ktx = "1.12.0"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
-lifecycleRuntimeKtx = "2.7.0"
-activityCompose = "1.8.2"
-composeBom = "2024.03.00"
+androidx-test-ext-junit = "1.1.5"
+espresso-core = "3.5.1"
+activity-compose = "1.8.2"
+retrofit = "2.10.0"
+okhttp = "5.0.0-alpha.12"
+androidxLifecycle = "2.7.0"
+androidxNavigation = "2.7.7"
+kotlinx-coroutines = "1.8.0"
+convention-plugin = "1.0.5"
 
+# ===========================================================
 [libraries]
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
-androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
-androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
-androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
-androidx-ui = { group = "androidx.compose.ui", name = "ui" }
-androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
-androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
-androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
-androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
-androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 
+# compose
+compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
+compose-ui = { group = "androidx.compose.ui", name = "ui" }
+compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+compose-ui-toolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+
+# testing
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+androidx-testExt = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "androidx-test-ext-junit" }
+compose-ui-testJunit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+compose-ui-testManifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+
+# retrofit
+retrofit= { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+converter-gson= { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+okhttp= { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+logging-interceptor= { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+
+# activity
+activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
+
+# lifecycle
+androidx-lifecycle-runtimeKtx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
+androidx-lifecycle-viewmodelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
+androidx-lifecycle-runtimeCompose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
+
+# navigation
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxNavigation" }
+androidx-navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "androidxNavigation" }
+
+# reflection
+kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect",  version.ref = "kotlin" }
+
+# coroutines
+kotlinx-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
+
+# ===========================================================
 [plugins]
-androidApplication = { id = "com.android.application", version.ref = "agp" }
-jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+convention-application-compose = { id = "it.nekotak.android.application-compose", version.ref = "convention-plugin" }
+convention-dependencyUpdatesChecker = { id = "it.nekotak.android.dependency-updates-checker", version.ref = "convention-plugin" }
+convention-releaseSigning = { id = "it.nekotak.android.release-signing", version.ref = "convention-plugin" }
+
+# ===========================================================
+[bundles]
+compose = ["compose-material3", "compose-ui", "compose-ui-graphics", "compose-ui-toolingPreview", "activity-compose", "androidx-lifecycle-runtimeKtx"]
+compose-debug = ["compose-ui-tooling", "compose-ui-testManifest"]
+retrofit = ["retrofit", "converter-gson", "okhttp", "logging-interceptor"]
+test = ["junit"]
+androidTest = ["androidx-testExt", "androidx-espresso-core"]
+androidTest-compose = ["androidx-testExt", "androidx-espresso-core", "compose-ui-testJunit4"]

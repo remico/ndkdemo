@@ -1,3 +1,5 @@
+apply(from = "github-packages.gradle.kts")
+
 pluginManagement {
     repositories {
         google {
@@ -16,6 +18,12 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+    }
+
+    versionCatalogs {
+        create("sdks") {
+            from(files("gradle/sdk.versions.toml"))
+        }
     }
 }
 
