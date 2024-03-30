@@ -23,8 +23,7 @@
 
 static const char *tag = "ndkdemo-cpp";
 
-extern "C"
-jstring
+extern "C" jstring
 Java_it_nekotak_ndkdemo_MainActivity_helloFromCpp(
         JNIEnv *env,
         jobject
