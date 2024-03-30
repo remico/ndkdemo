@@ -8,6 +8,10 @@ class Yi4KPlus(ip: String) {
 
     private external fun authenticate(ip: String): Boolean;
 
+    external fun startLivePreview();
+
+    external fun stopLivePreview();
+
     companion object {
         // Used to load the 'yi4kcam' library on application startup.
         init {

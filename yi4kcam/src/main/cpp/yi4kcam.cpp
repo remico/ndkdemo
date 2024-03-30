@@ -157,3 +157,15 @@ Java_it_nekotak_yi4kcam_Yi4KPlus_authenticate(JNIEnv *env, jobject thiz, jstring
     authenticate(camera_ip);
     return JNI_TRUE;
 }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_it_nekotak_yi4kcam_Yi4KPlus_startLivePreview(JNIEnv *env, jobject thiz) {
+    startLivePreview();
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_it_nekotak_yi4kcam_Yi4KPlus_stopLivePreview(JNIEnv *env, jobject thiz) {
+    stopLivePreview();
+}
