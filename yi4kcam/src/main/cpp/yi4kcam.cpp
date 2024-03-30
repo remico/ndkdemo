@@ -10,6 +10,8 @@
 #include <errno.h>
 #include <android/log.h>
 
+#include <jni.h>
+
 #define TAG "Yi4Cam"  // logging tag
 
 using namespace std;
@@ -135,4 +137,15 @@ void startLivePreview() {
 void stopLivePreview() {
     // TODO: use valid token
     sendRequest("{'token': 8, 'msg_id': 260}");
+}
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_it_nekotak_yi4kcam_Yi4KPlus_authenticate(JNIEnv *env, jobject thiz, jstring ip) {
+    const char *ip_utf = env->GetStringUTFChars(ip, NULL);
+    if (ip_utf == NULL) JNI_FALSE;
+    std::string camera_ip(ip_utf);
+    env->ReleaseStringUTFChars(ip, ip_utf);
+    authenticate(camera_ip);
+    return JNI_TRUE;
 }
