@@ -124,19 +124,20 @@ int parseAuthResponseForToken(string json) {
 
 }
 
-void authenticate(string camera_ip) {
+bool authenticate(string camera_ip) {
     // cleanup resources if already open
     if (-1 != sockfd) close_tcp_connection();
 
     // establish a new connection
-    if (!open_tcp_connection(camera_ip)) return;
+    if (!open_tcp_connection(camera_ip)) return false;
 
     // ask for a session token
-    if (!sendRequest("{'token': 0, 'msg_id': 257}")) return;
+    if (!sendRequest("{'token': 0, 'msg_id': 257}")) return false;
 
     // remember the session token
     token = parseAuthResponseForToken(waitForResponse());
     __android_log_print(ANDROID_LOG_INFO, TAG, "Token received: %i", token);
+    return true;
 }
 
 void startLivePreview() {
