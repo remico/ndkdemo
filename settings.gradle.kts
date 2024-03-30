@@ -29,3 +29,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "ndkdemo"
 include(":app")
+include(":yi4kcam")

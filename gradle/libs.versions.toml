@@ -61,6 +61,7 @@ kotlinx-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutin
 # ===========================================================
 [plugins]
 convention-application-compose = { id = "it.nekotak.android.application-compose", version.ref = "convention-plugin" }
+convention-library-compose = { id = "it.nekotak.android.library-compose", version.ref = "convention-plugin" }
 convention-dependencyUpdatesChecker = { id = "it.nekotak.android.dependency-updates-checker", version.ref = "convention-plugin" }
 convention-releaseSigning = { id = "it.nekotak.android.release-signing", version.ref = "convention-plugin" }
 
