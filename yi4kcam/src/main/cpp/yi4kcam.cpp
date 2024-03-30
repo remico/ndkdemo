@@ -60,6 +60,16 @@ bool sendRequest(string json) {
     // replace single quotes with double quotes as JSON format strictly needs double quoted strings,
     // while when hardcoding JSON strings within source code it's easier to use single quotes
     replace(json.begin(), json.end(), '\'', '"');
+
+    // replace token placeholder with actual session token value
+    // Find the position of '<T>'
+    const char *TOKEN_PLACEHOLDER = "<T>";
+    size_t tokenPos = json.find(TOKEN_PLACEHOLDER);
+    if (tokenPos != std::string::npos) {  // replace only if found token placeholder
+        json.replace(tokenPos, strlen(TOKEN_PLACEHOLDER), to_string(token));
+    }
+
+    // send packet
     __android_log_print(ANDROID_LOG_INFO, TAG, "Sending to camera: %s", json.data());
     ssize_t sent_bytes = send(sockfd, json.data(), json.size(), 0);
     if (sent_bytes < 0) {
@@ -122,7 +132,7 @@ void authenticate(string camera_ip) {
     if (!open_tcp_connection(camera_ip)) return;
 
     // ask for a session token
-    sendRequest("{'token': 0, 'msg_id': 257}");
+    if (!sendRequest("{'token': 0, 'msg_id': 257}")) return;
 
     // remember the session token
     token = parseAuthResponseForToken(waitForResponse());
@@ -130,13 +140,11 @@ void authenticate(string camera_ip) {
 }
 
 void startLivePreview() {
-    // TODO: use valid token
-    sendRequest("{'token': 8, 'msg_id': 259, 'param': 'none_force'}");
+    sendRequest("{'token': <T>, 'msg_id': 259, 'param': 'none_force'}");
 }
 
 void stopLivePreview() {
-    // TODO: use valid token
-    sendRequest("{'token': 8, 'msg_id': 260}");
+    sendRequest("{'token': <T>, 'msg_id': 260}");
 }
 
 extern "C"
