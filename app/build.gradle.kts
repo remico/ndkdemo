@@ -10,7 +10,7 @@ android {
         externalNativeBuild {
             cmake {
                 cppFlags += listOf(
-                    "-std=c++20",
+                    "-std=c++17",
                 )
                 // gradle only BUILDS (does NOT package) the ABIs specified below
                 // details: https://developer.android.com/studio/projects/gradle-external-native-builds#specify-abi
