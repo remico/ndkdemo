@@ -34,5 +34,5 @@ android {
 }
 
 dependencies {
-
+    implementation(project(":yi4kcam"))
 }
