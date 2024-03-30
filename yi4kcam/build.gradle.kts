@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.convention.library.compose)
+    alias(libs.plugins.convention.library)
 }
 
 android {
@@ -29,5 +29,5 @@ android {
 }
 
 dependencies {
-    implementation(libs.bundles.compose)
+
 }
