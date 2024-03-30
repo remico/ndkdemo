@@ -55,8 +55,11 @@ void close_tcp_connection() {
 }
 
 bool sendRequest(string json) {
-    const char *data = json.c_str();
-    ssize_t sent_bytes = send(sockfd, data, strlen(data), 0);
+    // replace single quotes with double quotes as JSON format strictly needs double quoted strings,
+    // while when hardcoding JSON strings within source code it's easier to use single quotes
+    replace(json.begin(), json.end(), '\'', '"');
+    __android_log_print(ANDROID_LOG_INFO, TAG, "Sending to camera: %s", json.data());
+    ssize_t sent_bytes = send(sockfd, json.data(), json.size(), 0);
     if (sent_bytes < 0) {
         __android_log_print(ANDROID_LOG_ERROR, TAG, "Error sending message to server: %s", strerror(errno));
         close(sockfd);
@@ -66,11 +69,45 @@ bool sendRequest(string json) {
 }
 
 string waitForResponse() {
-    return "";  // json response
+    uint8_t buffer[1024];
+    ssize_t received_bytes = recv(sockfd, buffer, sizeof(buffer), 0);
+    if (received_bytes < 0) {
+        close_tcp_connection();
+        return "";
+    }
+    return string(reinterpret_cast<const char*>(buffer), received_bytes);  // json response
 }
 
-int parseAuthResponse(string json) {
-    return 0;
+int parseAuthResponseForToken(string json) {
+    // Find the position of "param" key
+    size_t paramPos = json.find("\"param\":");
+    if (paramPos == string::npos) {
+        __android_log_print(ANDROID_LOG_ERROR, TAG, "JSON does not contain 'param' key");
+        return -1; // Return error code
+    }
+
+    // Find the position of the value after the colon and any subsequent spaces
+    size_t valueStartPos = json.find_first_not_of(" \t\r\n", paramPos + 8); // "param": is 8 characters long
+    if (valueStartPos == std::string::npos) {
+        __android_log_print(ANDROID_LOG_ERROR, TAG, "Invalid JSON format");
+        return -1; // Return error code
+    }
+
+    // Find the end position of the value
+    size_t valueEndPos = json.find_first_of(",}", valueStartPos);
+    if (valueEndPos == std::string::npos) {
+        __android_log_print(ANDROID_LOG_ERROR, TAG, "Invalid JSON format");
+        return -1; // Return error code
+    }
+
+    // Extract and convert the "param" value substring to integer
+    string paramValueStr = json.substr(valueStartPos, valueEndPos - valueStartPos);
+    try {
+        return stoi(paramValueStr);
+    } catch (const exception& e) {
+        __android_log_print(ANDROID_LOG_ERROR, TAG, "Failed to convert 'param' value to integer: %s", e.what());
+        return -1; // Return error code
+    }
 }
 
 }
@@ -86,8 +123,8 @@ void authenticate(string camera_ip) {
     sendRequest("{'token': 0, 'msg_id': 257}");
 
     // remember the session token
-    // {'rval': 0, 'msg_id': 257, 'param': 5, 'model': 'Z18', 'rtsp': 'rtsp://192.168.42.1/live'}
-    token = parseAuthResponse(waitForResponse());
+    token = parseAuthResponseForToken(waitForResponse());
+    __android_log_print(ANDROID_LOG_INFO, TAG, "Token received: %i", token);
 }
 
 void startLivePreview() {
