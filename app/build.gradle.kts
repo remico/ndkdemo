@@ -37,10 +37,6 @@ android {
     }
 }
 
-dependencies {
-    implementation(project(":yi4kcam"))
-}
-
 
 /**
  * Custom task to copy libyi4kcam.so artifact in order to prepare it for using in the main application.
