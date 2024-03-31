@@ -21,10 +21,12 @@
 #include <sstream>
 #include <string>
 
+#include "yi4kcam.h"
+
 static const char *tag = "ndkdemo-cpp";
 
 extern "C" jstring
-Java_it_nekotak_ndkdemo_MainActivity_helloFromCpp(
+Java_it_nekotak_ndkdemo_JNIWrapper_helloFromCpp(
         JNIEnv *env,
         jobject
 ) {
@@ -41,4 +43,23 @@ Java_it_nekotak_ndkdemo_MainActivity_helloFromCpp(
                         "helloFromCpp() call returns: \"%s\"", hello.c_str());
 
     return env->NewStringUTF(hello.c_str());
+}
+
+extern "C" jboolean
+Java_it_nekotak_ndkdemo_JNIWrapper_authenticate(JNIEnv *env, jobject thiz, jstring ip) {
+    const char *ip_utf = env->GetStringUTFChars(ip, NULL);
+    if (ip_utf == NULL) JNI_FALSE;
+    std::string camera_ip(ip_utf);
+    env->ReleaseStringUTFChars(ip, ip_utf);
+    return authenticate(camera_ip);
+}
+
+extern "C" void
+Java_it_nekotak_ndkdemo_JNIWrapper_startLivePreview(JNIEnv *env, jobject thiz) {
+    startLivePreview();
+}
+
+extern "C" void
+Java_it_nekotak_ndkdemo_JNIWrapper_stopLivePreview(JNIEnv *env, jobject thiz) {
+    stopLivePreview();
 }

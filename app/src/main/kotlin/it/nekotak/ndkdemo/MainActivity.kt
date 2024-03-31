@@ -23,27 +23,20 @@ import it.nekotak.ndkdemo.ui.theme.NdkdemoTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val jniWrapper = JNIWrapper()
         setContent {
             NdkdemoTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    Greeting(helloFromCpp())
+                    Greeting(jniWrapper, jniWrapper.helloFromCpp())
                 }
             }
-        }
-    }
-
-    private external fun helloFromCpp(): String
-
-    companion object {
-        init {
-            System.loadLibrary("ndkdemo")
         }
     }
 }
 
 @Composable
-fun Greeting(text: String, modifier: Modifier = Modifier) {
+fun Greeting(jniWrapper: JNIWrapper, text: String, modifier: Modifier = Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -55,13 +48,13 @@ fun Greeting(text: String, modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(20.dp))
         Row {
             Button(onClick = {
-//                camera.startLivePreview()
+                jniWrapper.startLivePreview()
             }) {
                 Text(text = "Start live preview")
             }
             Spacer(modifier = Modifier.width(20.dp))
             Button(onClick = {
-//                camera.stopLivePreview()
+                jniWrapper.stopLivePreview()
             }) {
                 Text(text = "Stop live preview")
             }
