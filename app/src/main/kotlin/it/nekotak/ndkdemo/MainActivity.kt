@@ -46,6 +46,12 @@ fun Greeting(jniWrapper: JNIWrapper, text: String, modifier: Modifier = Modifier
             modifier = modifier
         )
         Spacer(modifier = Modifier.height(20.dp))
+        Button(onClick = {
+            jniWrapper.authenticate("192.168.1.106")
+        }) {
+            Text(text = "Authenticate")
+        }
+        Spacer(modifier = Modifier.height(20.dp))
         Row {
             Button(onClick = {
                 jniWrapper.startLivePreview()
