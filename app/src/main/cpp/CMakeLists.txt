@@ -41,17 +41,18 @@ find_library(
     log)
 
 
-## 3d-party imported library
-#set(camera-lib yi4k-camera)  # refer to the library via a variable
-#add_library(${camera-lib} SHARED IMPORTED)
-#include_directories(include/)
-#set_target_properties(
-#        # Specifies the target library.
-#        ${camera-lib}
-#        # Specifies the parameter you want to define.
-#        PROPERTIES IMPORTED_LOCATION
-#        # Provides the path to the library you want to import.
-#        libs/${ANDROID_ABI}/lib${camera-lib}.so )
+# 3d-party imported library
+set(camera-lib yi4kcam)  # refer to the library via a variable
+set(ANDROID_PROJECT_ROOT_DIR ${CMAKE_SOURCE_DIR}/../../../)
+add_library(${camera-lib} SHARED IMPORTED)
+include_directories(${ANDROID_PROJECT_ROOT_DIR}/libs/)
+set_target_properties(
+        # Specifies the target library.
+        ${camera-lib}
+        # Specifies the parameter you want to define.
+        PROPERTIES IMPORTED_LOCATION
+        # Provides the path to the library you want to import.
+        ${ANDROID_PROJECT_ROOT_DIR}/libs/${ANDROID_ABI}/lib${camera-lib}.so )
 
 
 # Specifies libraries CMake should link to your target library. You
@@ -59,5 +60,6 @@ find_library(
 # build script, prebuilt third-party libraries, or Android system libraries.
 target_link_libraries(${CMAKE_PROJECT_NAME}
     # List libraries link to the target library
+    ${camera-lib}
     android
     ${log-lib})
