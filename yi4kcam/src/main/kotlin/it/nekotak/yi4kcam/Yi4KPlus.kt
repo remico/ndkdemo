@@ -1,5 +1,9 @@
 package it.nekotak.yi4kcam
 
+/**
+ * Helper class for ad-hoc testing the underlying c++ library behavior.
+ * This class shouldn't be used in client applications.
+ */
 class Yi4KPlus(ip: String) {
 
     init {
