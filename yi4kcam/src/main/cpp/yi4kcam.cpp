@@ -155,8 +155,7 @@ Java_it_nekotak_yi4kcam_Yi4KPlus_authenticate(JNIEnv *env, jobject thiz, jstring
     if (ip_utf == NULL) JNI_FALSE;
     std::string camera_ip(ip_utf);
     env->ReleaseStringUTFChars(ip, ip_utf);
-    authenticate(camera_ip);
-    return JNI_TRUE;
+    return authenticate(camera_ip);
 }
 
 extern "C"
