@@ -60,7 +60,7 @@ project.extensions.configure<ApplicationAndroidComponentsExtension> {
             project.tasks.withType<ExternalNativeBuildJsonTask> {
                 if (variantName in name
                     // the below is to support release variant: `configureCMakeRelWithDebInfo[<ABI>]`
-                    || variantName == "Release" && "RelWithDebInfo" in name
+                    || (variantName == "Release" && "RelWithDebInfo" in name)
                 ) {
                     dependsOn(copyCamLibTask)
                 }
