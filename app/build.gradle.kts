@@ -53,7 +53,7 @@ project.extensions.configure<ApplicationAndroidComponentsExtension> {
 
             val copyCamLibTask = project.tasks.register<Copy>("copy${variantName}Yi4KCamLib") {
                 dependsOn(produceCamLibTask)
-                from(produceCamLibTask.outputs.files.asPath)
+                from(produceCamLibTask.outputs.files.asPath, camPrj.projectDir.resolve("src/main/cpp/include"))
                 into("libs")
             }
 
