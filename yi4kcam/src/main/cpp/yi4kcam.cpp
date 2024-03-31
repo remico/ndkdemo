@@ -137,6 +137,7 @@ bool authenticate(string camera_ip) {
     // remember the session token
     token = parseAuthResponseForToken(waitForResponse());
     __android_log_print(ANDROID_LOG_INFO, TAG, "Token received: %i", token);
+    __android_log_print(ANDROID_LOG_INFO, TAG, "Live stream preview is available on: rtsp://%s/live", camera_ip.c_str());
     return true;
 }
 
