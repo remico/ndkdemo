@@ -15,7 +15,7 @@
 //         System.loadLibrary("ndkdemo")
 //      }
 //    }
-#include "include/ndkdemo.h"
+#include "ndkdemo.h"
 
 #include <android/log.h>
 #include <sstream>

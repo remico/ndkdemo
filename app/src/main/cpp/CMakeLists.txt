@@ -30,7 +30,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
     ndkdemo.cpp)
 
 # Specifies a path to native header files.
-include_directories(src/main/cpp/include/)
+include_directories(${PROJECT_SOURCE_DIR}/include/)
 
 
 # Standard logging library
