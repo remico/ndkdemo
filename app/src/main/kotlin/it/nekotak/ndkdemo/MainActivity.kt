@@ -61,8 +61,8 @@ fun Greeting(jniWrapper: JNIWrapper, text: String, modifier: Modifier = Modifier
             exit = shrinkVertically(animationSpec = tween(durationMillis = 1000))
         ) {
             Button(onClick = {
-                jniWrapper.authenticate("192.168.1.106")
-                if (!isAuthenticated) {
+                val success = jniWrapper.authenticate("192.168.1.106")
+                if (success && !isAuthenticated) {
                     isAuthenticated = true
                 }
             }) {
@@ -74,23 +74,17 @@ fun Greeting(jniWrapper: JNIWrapper, text: String, modifier: Modifier = Modifier
             enter = expandVertically(animationSpec = tween(durationMillis = 1000)),
             exit = shrinkVertically(animationSpec = tween(durationMillis = 1000))
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-            ) {
-                Spacer(modifier = Modifier.height(20.dp))
-                Row {
-                    Button(onClick = {
-                        jniWrapper.startLivePreview()
-                    }) {
-                        Text(text = "Start live preview")
-                    }
-                    Spacer(modifier = Modifier.width(20.dp))
-                    Button(onClick = {
-                        jniWrapper.stopLivePreview()
-                    }) {
-                        Text(text = "Stop live preview")
-                    }
+            Row {
+                Button(onClick = {
+                    jniWrapper.startLivePreview()
+                }) {
+                    Text(text = "Start live preview")
+                }
+                Spacer(modifier = Modifier.width(20.dp))
+                Button(onClick = {
+                    jniWrapper.stopLivePreview()
+                }) {
+                    Text(text = "Stop live preview")
                 }
             }
         }
