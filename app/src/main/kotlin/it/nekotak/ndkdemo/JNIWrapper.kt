@@ -4,11 +4,11 @@ class JNIWrapper {
 
     external fun helloFromCpp(): String
 
-    external fun authenticate(ip: String): Boolean;
+    external fun authenticate(ip: String): Boolean
 
-    external fun startLivePreview();
+    external fun startLivePreview()
 
-    external fun stopLivePreview();
+    external fun stopLivePreview()
 
     companion object {
         init {
