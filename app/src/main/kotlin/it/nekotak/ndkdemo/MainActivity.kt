@@ -3,6 +3,7 @@ package it.nekotak.ndkdemo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
@@ -19,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,17 +28,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import it.nekotak.ndkdemo.ui.theme.NdkdemoTheme
 
 class MainActivity : ComponentActivity() {
+
+    private val viewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val jniWrapper = JNIWrapper()
         setContent {
             NdkdemoTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    Greeting(jniWrapper, jniWrapper.helloFromCpp())
+                    CameraControlScreen(viewModel)
                 }
             }
         }
@@ -44,45 +49,69 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(jniWrapper: JNIWrapper, text: String, modifier: Modifier = Modifier) {
-    var isAuthenticated by remember { mutableStateOf(false) }
+fun CameraControlScreen(
+    viewModel: MainViewModel,
+    modifier: Modifier = Modifier,
+) {
+    val uiState by viewModel.state.collectAsStateWithLifecycle()
+    var greetingText by remember { mutableStateOf("*****") }
+
+    // single shot launched effect
+    LaunchedEffect(key1 = Unit) {
+        greetingText = viewModel.helloFromCpp()
+    }
+
+    CameraControlScreenContent(
+        greetingText,
+        authenticate = { viewModel.authenticate("192.168.1.106") },
+        onUiEvent = viewModel::onUiEvent,
+        uiState = uiState,
+        modifier = modifier,
+    )
+}
+
+@Composable
+fun CameraControlScreenContent(
+    greetingText: String,
+    authenticate: () -> Unit,
+    onUiEvent: (MainViewModel.UiEvent) -> Unit,
+    uiState: MainViewModel.UiState,
+    modifier: Modifier = Modifier,
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
         Text(
-            text = text,
+            text = greetingText,
             modifier = modifier
         )
         Spacer(modifier = Modifier.height(20.dp))
         AnimatedVisibility(
-            visible = !isAuthenticated,
+            visible = !uiState.isAuthenticated,
             enter = expandVertically(animationSpec = tween(durationMillis = 1000)),
             exit = shrinkVertically(animationSpec = tween(durationMillis = 1000))
         ) {
             Button(onClick = {
-                val success = jniWrapper.authenticate("192.168.1.106")
-                if (success && !isAuthenticated) {
-                    isAuthenticated = true
-                }
+                authenticate()
             }) {
                 Text(text = "Authenticate")
             }
         }
         AnimatedVisibility(
-            visible = isAuthenticated,
+            visible = uiState.isAuthenticated,
             enter = expandVertically(animationSpec = tween(durationMillis = 1000)),
             exit = shrinkVertically(animationSpec = tween(durationMillis = 1000))
         ) {
             Row {
                 Button(onClick = {
-                    jniWrapper.startLivePreview()
+                    onUiEvent(MainViewModel.UiEvent.StartLivePreview)
                 }) {
                     Text(text = "Start live preview")
                 }
                 Spacer(modifier = Modifier.width(20.dp))
                 Button(onClick = {
-                    jniWrapper.stopLivePreview()
+                    onUiEvent(MainViewModel.UiEvent.StopLivePreview)
                 }) {
                     Text(text = "Stop live preview")
                 }
